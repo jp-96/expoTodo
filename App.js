@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar as ReactNStatubBar, Platform } from 'react-native';
+
+const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : ReactNStatubBar.currentHeight;
 
 export default function App() {
   return (
@@ -15,7 +17,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: STATUSBAR_HEIGHT,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
