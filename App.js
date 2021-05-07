@@ -7,10 +7,23 @@ import { StyleSheet, Text, View, StatusBar as ReactNStatubBar, Platform,
          Button,
          KeyboardAvoidingView,
          AsyncStorage,
+         TouchableOpacity,
 } from 'react-native';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : ReactNStatubBar.currentHeight;
 const TODO = "@todoapp.todo";
+
+const TodoItem = (props) => {
+  let textStyle = styles.todoItem;
+  if (props.done === true) {
+    textStyle = styles.todoItemDone;
+  }
+  return (
+    <TouchableOpacity onPress={props.onTapTodoItem}>
+      <Text style={textStyle}>{props.title}</Text>
+    </TouchableOpacity>
+  )
+}
 
 export default class App extends React.Component {
 
@@ -66,6 +79,15 @@ export default class App extends React.Component {
     this.saveTodo(todo);
   }
 
+  onTapTodoItem = (todoItem) => {
+    const todo = this.state.todo;
+    const index = todo.indexOf(todoItem);
+    todoItem.done = !todoItem.done;
+    todo[index] = todoItem;
+    this.setState({todo: todo});
+    this.saveTodo(todo);
+  }
+
   render() {
     const filterText = this.state.filterText;
     let todo = this.state.todo;
@@ -84,7 +106,7 @@ export default class App extends React.Component {
         </View>
         <ScrollView style={styles.todolist}>
           <FlatList data={todo}
-            renderItem={({item}) => <Text>{item.title}</Text>}
+            renderItem={({item}) => <TodoItem title={item.title} done={item.done} onTapTodoItem={() => this.onTapTodoItem(item)}/>}
             keyExtractor={(item, index) => "todo_" + item.index}
           />
         </ScrollView>
@@ -130,5 +152,15 @@ const styles = StyleSheet.create({
   },
   inputButton: {
     width: 100,
+  },
+  todoItem: {
+    fontSize: 36,
+    backgroundColor: "white",
+    color: "black",
+  },
+  todoItemDone: {
+    fontSize: 36,
+    backgroundColor: "blue",
+    color: "white",
   },
 });
