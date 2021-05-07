@@ -6,7 +6,6 @@ import { StyleSheet, Text, View, StatusBar as ReactNStatubBar, Platform,
          TextInput,
          Button,
          KeyboardAvoidingView,
-         AsyncStorageStatic,
          AsyncStorage,
 } from 'react-native';
 
@@ -21,6 +20,7 @@ export default class App extends React.Component {
       todo: [],
       currentIndex: 0,
       inputText: "",
+      filterText: "",
     };
   }
 
@@ -67,13 +67,23 @@ export default class App extends React.Component {
   }
 
   render() {
+    const filterText = this.state.filterText;
+    let todo = this.state.todo;
+    if (filterText != "") {
+      todo = todo.filter(t => t.title.includes(filterText));
+    }
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.filter}>
-          <Text>フィルターがここに配置される</Text>
+          <TextInput
+            onChangeText={(text) => this.setState({filterText: text})}
+            value={this.state.filterText}
+            style={styles.inputText}
+            placeholder="Type Filter Text!"  
+          />
         </View>
         <ScrollView style={styles.todolist}>
-          <FlatList data={this.state.todo}
+          <FlatList data={todo}
             renderItem={({item}) => <Text>{item.title}</Text>}
             keyExtractor={(item, index) => "todo_" + item.index}
           />
